@@ -1,0 +1,17 @@
+# Account allowed only from automation host
+database:
+  # Paramètres de connexion MySQL
+  host: "203.0.113.80"
+  port: 3306
+  user: "racktables_user"
+  password: "<DB_PASSWORD>"
+  db_name: "racktables_prod"
+
+# Account allowed only from secondary automation host
+# database:
+#   # Paramètres de connexion MySQL
+#   host: "203.0.113.80"
+#   port: 3306
+#   user: "racktables_user2"
+#   password: "<DB_PASSWORD>"
+#   db_name: "racktables_prod"

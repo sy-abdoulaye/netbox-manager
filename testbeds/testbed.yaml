@@ -1,0 +1,93 @@
+extends: base_testbed.yaml
+# Add device in this section below devices
+# NOTE: fichier remplacé par un échantillon synthétique (4 devices fictifs)
+# pour la publication — l'original contient le véritable inventaire coeur réseau.
+devices:
+  # COREBIB - RR/RRVPN - CHAINE N1 ##################################
+  demo-7750-rrbib-01:
+    region: chaine_n1
+    alias: demo-7750-rrbib-01
+    os: sros
+    custom:
+      type: 7750_SR
+      arch: 7750_SR_1_md
+      role: COREIP_RRVPN
+      process_isis: COEUR
+      manufacturer: Nokia
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.120
+        port: 22
+        proxy: jump-n1
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+
+  demo-asr-pebib-01:
+    region: chaine_n
+    alias: demo-asr-pebib-01
+    os: iosxr
+    custom:
+      type: ASR-9010
+      arch: ASR9K
+      role: COREIP_PEBIB
+      process_isis: COEUR
+      manufacturer: Cisco
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.121
+        port: 22
+        proxy: jump-n
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+
+  demo-ne8000-pe-01:
+    region: chaine_n1
+    alias: demo-ne8000-pe-01
+    os: hvrp
+    custom:
+      type: NE_8000
+      arch: NE8000_M14
+      role: COREB2B_PE
+      process_isis: COREB2B
+      manufacturer: Huawei
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.122
+        port: 22
+        proxy: jump-n1
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+
+  demo-ios-swagr-01:
+    region: chaine_n
+    alias: demo-ios-swagr-01
+    os: ios
+    custom:
+      type: Catalyst-9300
+      arch: C9300
+      role: COREB2B_SWAGR
+      process_isis: COREB2B
+      manufacturer: Cisco
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.123
+        port: 22
+        proxy: jump-n
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0

@@ -1,0 +1,12 @@
+VALID_TYPES:
+  - "Network switch"
+  - "Router"
+  - "Switch"
+  - "Concentrateur"
+  - "Agrégateur_Brasseur_Matrice Niv1"
+  - "OLT"
+
+VALID_TAGS:
+  - "COEUR IP et TRANSMISSION"
+  - "COEUR B2B"
+  - "ACCES FIXE et COLLECTE"

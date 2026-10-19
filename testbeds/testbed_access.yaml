@@ -1,0 +1,72 @@
+extends: base_testbed.yaml
+# Add device in this section below devices
+# NOTE: fichier remplacé par un échantillon synthétique (3 devices fictifs)
+# pour la publication — l'original contient le véritable inventaire FTTH/accès.
+devices:
+  demo-olt-01:
+    region: chaine_n1
+    alias: demo-olt-01
+    os: alticeptin
+    custom:
+      type: ALTICE_1Tx
+      arch: ALTICE_1T3
+      role: ACCESS_OLT
+      process_isis: undefined
+      manufacturer: Altice
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.100
+        port: 22
+        proxy: jump-olt
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+          EXEC_TIMEOUT: 120
+
+  demo-olt-02:
+    region: chaine_n
+    alias: demo-olt-02
+    os: isam
+    custom:
+      type: ISAM_FX
+      arch: ISAM_FX_8
+      role: ACCESS_OLT
+      process_isis: undefined
+      manufacturer: Alcatel-Lucent
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.101
+        port: 22
+        proxy: jump-olt
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+          EXEC_TIMEOUT: 120
+
+  demo-switch-01:
+    region: chaine_n1
+    alias: demo-switch-01
+    os: aos8
+    custom:
+      type: OS6860
+      arch: OS6860E
+      role: ACCESS_OLT
+      process_isis: undefined
+      manufacturer: Alcatel-Lucent
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.102
+        port: 22
+        proxy: jump-n1
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0

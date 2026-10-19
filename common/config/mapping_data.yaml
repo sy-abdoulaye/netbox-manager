@@ -1,0 +1,273 @@
+# ============================================================
+#  Constants configuration (YAML)
+#  File: common/config/constants.yaml
+#
+#  This file centralizes all business and technical constants
+#  used to normalize, enrich and correlate network data coming
+#  from CLI outputs, RackTables and NetBox.
+#
+#  Purpose:
+#   - Normalize device roles and platforms
+#   - Identify network operating systems
+#   - Normalize interface names and types
+#   - Provide hardware physical characteristics
+# ============================================================
+
+# ------------------------------------------------------------
+# Logical zones used to qualify environments
+# (lab, production, redundancy, etc.)
+# ------------------------------------------------------------
+zones:
+  N: Lab Chaine N
+  Nplus1: Lab Chaine N1
+
+# ------------------------------------------------------------
+# NetBox role normalization
+#
+# Some roles detected via naming patterns do not exactly match
+# NetBox roles. This mapping ensures consistency.
+# ------------------------------------------------------------
+expected_netbox_roles:
+  pnbib: pbib
+  penbib: pebib
+  peintnbib: peint
+  asr9k-co: co
+
+# ------------------------------------------------------------
+# Mapping between device roles and network operating systems
+#
+# This allows the system to:
+#   - Select the correct parser
+#   - Apply vendor-specific interface naming rules
+#   - Enforce OS-related constraints
+# ------------------------------------------------------------
+devices_os_supported_roles:
+  iosxr:
+    - rr
+    - rrvpn
+    - co
+    - xtc
+    - penbib
+    - peintnbib
+    - pnbib
+    - spinebib
+    - leafbib
+    - pespon
+    - dcigw
+    - asr96-01
+    - pecng
+    - pesng
+  iosxe:
+    - ipsec
+    - pe-nim
+    - rr-bib
+  sros:
+    - pesms
+    - 7750
+    - segw
+  hvrp:
+    - peag
+    - pesat
+    - ftts
+    - swsrthd
+    - ura
+    - uar
+  nxos:
+    - leaf
+    - spine
+
+# ------------------------------------------------------------
+# Interface prefix → NetBox interface type mapping
+#
+# Used to properly assign interface media types in NetBox
+# based on CLI interface naming conventions.
+# ------------------------------------------------------------
+interfaces_types:
+  Hu: 100gbase-x-qsfp28
+  Mg: 1000base-t
+  MG: 1000base-t
+  Ten: 10gbase-x-sfpp
+  Gi: 1000base-x-sfp
+  Fo: 40gbase-x-qsfpp
+  Twe: 200gbase-x-qsfp56
+  FH: 400gbase-x-qsfpdd
+  Lo: virtual
+  Bu: lag
+
+# ------------------------------------------------------------
+# Interface abbreviation normalization table
+#
+# Converts short interface names from CLI outputs into
+# standardized full interface names.
+#
+# Example:
+#   Te0/0/0 → TenGigabitEthernet0/0/0
+# ------------------------------------------------------------
+interface_abbreviation_mapping_table:
+  generic:
+    Eth: Ethernet
+    SEth: Service-Ethernet
+    Lo: Loopback
+    lo: Loopback
+    Fa: FastEthernet
+    Fas: FastEthernet
+    Po: Port-channel
+    PO: Port-channel
+    Gi: GigabitEthernet
+    Gig: GigabitEthernet
+    GE: GigabitEthernet
+    Te: TenGigabitEthernet
+    Ten: TenGigabitEthernet
+    Tw: TwoGigabitEthernet
+    Two: TwoGigabitEthernet
+    Twe: TwentyFiveGigE
+    Fi: FiveGigabitEthernet
+    Fiv: FiveGigabitEthernet
+    Fif: FiftyGigE
+    Fifty: FiftyGigabitEthernet
+    mgmt: mgmt
+    Vl: Vlan
+    Tu: Tunnel
+    Hs: HSSI
+    AT: ATM
+    Et: Ethernet
+    BD: BDI
+    Ser: Serial
+    Se: Serial
+    Fo: FortyGigabitEthernet
+    For: FortyGigabitEthernet
+    Hu: HundredGigE
+    Hun: HundredGigE
+    TwoH: TwoHundredGigabitEthernet
+    Fou: FourHundredGigE
+    vl: vasileft
+    vr: vasiright
+    BE: Bundle-Ether
+    tu: Tunnel
+    M-E: M-Ethernet
+    BAGG: Bridge-Aggregation
+    Ten-GigabitEthernet: TenGigabitEthernet
+    Wl: Wlan-GigabitEthernet
+    Di: Dialer
+    Vi: Virtual-Access
+    Ce: Cellular
+    Vp: Virtual-PPP
+    pw: pseudowire
+
+  # IOS-XR specific interface naming
+  iosxr:
+    BV: BVI
+    BE: Bundle-Ether
+    Be: Bundle-Ether
+    BP: Bundle-POS
+    Eth: Ethernet
+    Fa: FastEthernet
+    Gi: GigE
+    Te: TenGigE
+    Tf: TwentyFiveGigE
+    Fo: FortyGigE
+    Fi: FiftyGigE
+    Hu: HundredGigE
+    Th: TwoHundredGigE
+    Fh: FourHundredGigE
+    FH: FourHundredGigE
+    TF: TwentyFiveGigE
+    Tsec: tunnel-ipsec
+    Ti: tunnel-ip
+    Tm: tunnel-mte
+    Tt: tunnel-te
+    Tp: tunnel-tp
+    IMA: IMA
+    IL: InterflexLeft
+    IR: InterflexRight
+    Lo: Loopback
+    Mg: MgmtEth
+    Ml: Multilink
+    Nu: Null
+    POS: POS
+    Pw: PW-Ether
+    Pi: PW-IW
+    SRP: SRP
+    Se: Serial
+    CS: CSI
+    G0: GCC0
+    G1: GCC1
+    nG: nVFabric-GigE
+    nT: nVFabric-TenGigE
+    nF: nVFabric-FortyGigE
+    nH: nVFabric-HundredGigE
+
+# ------------------------------------------------------------
+# Device hardware height (rack units, U)
+#
+# Based on vendor datasheets.
+# Used for:
+#   - Rack capacity validation
+#   - Automatic NetBox DeviceType creation
+# ------------------------------------------------------------
+device_type_u_height:
+  ASR-1006: 6
+  ASR-1006-X: 6
+  ASR-9001: 2
+  ASR-9006: 10
+  ASR-9010: 21
+  ASR-9903: 3
+  ASR-9904: 6
+  ASR-9906: 14
+  ASR-9912: 30
+  SmartEdge-1200: 15
+  NCS-5001: 1
+  NCS-5504: 7
+  NCS-5508: 13
+  NCS-55A1: 1
+  NE40E: 2
+  NE40E-X8: 14
+  NE8000-M8-DC: 3
+  Perle-CS9000: 1
+  IOLAN-STS4-D: 1
+  S9306: 10
+  OLT1T1: 3
+  OLT2T2: 4
+  OLT1T3: 14
+  OLT2T4: 15
+  ISAM-7360-FX-16: 14
+  ISAM-7360-FX-4: 5
+  ISAM-7360-FX-8: 7
+  UCS-C220-M5: 1
+  7206VXR: 6
+  7301: 1
+  7750-SR-1: 2
+  7750-SR-7: 8
+  7750-SR-12: 14
+  7750-SR-12E: 22
+  7750-SR-2S: 6
+  # S6348-EI:
+  # ASR-1002F:
+  # OS6855:
+  # S6330:
+# ------------------------------------------------------------
+# Supported module types for chassis-based platforms
+# ------------------------------------------------------------
+supported_linecards_rp:
+  - LC
+  - RP
+  - RSP
+
+# # ------------------------------------------------------------
+# # Expected functional domains
+# # Used for validation and normalization
+# # ------------------------------------------------------------
+# expected_domaine:
+#   - COEUR IP et TRANSMISSION
+#   - COEUR B2B
+
+# ------------------------------------------------------------
+# Network operating systems supported by the tooling
+# ------------------------------------------------------------
+supported_platforms:
+  - iosxr
+  - iosxe
+  - hvrp
+  - sros
+  - alticeptin
+  - isam

@@ -1,0 +1,5 @@
+extends:
+  - testbed_servers.yaml
+  - testbed_access.yaml
+  - testbed_collect.yaml
+  - testbed.yaml

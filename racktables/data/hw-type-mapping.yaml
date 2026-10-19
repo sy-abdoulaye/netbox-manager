@@ -1,0 +1,110 @@
+# ============================================================
+# HW Type Mapping for RackTables to NetBox
+# ============================================================
+# Key: Raw model name extracted from RackTables HW type
+#      (after parsing %GPASS% format)
+# Value: NetBox device-type model name
+#
+# Example RackTables format:
+#   "Cisco%GPASS%ASR 9010" -> key is "ASR 9010" or "ASR-9010"
+# ============================================================
+
+devices_types_mapping:
+  # Cisco ASR Series
+  ASR-9010: ASR-9010
+  ASR-9000V: ASR-9006
+  ASR-9006: ASR-9006
+  ASR-9001: ASR-9001
+  ASR-9912: ASR-9912
+  ASR-9904: ASR-9904
+  ASR-9906: ASR-9906
+  ASR-1006: ASR-1006
+
+  # Cisco NCS Series
+  NCS-5001: NCS-5001
+  NCS-5502: NCS-5502
+  NCS-5504: NCS-5504
+  NCS-5508: NCS-5508
+  NCS-55A1: NCS-55A1
+
+  # Cisco Nexus Series
+  NEXUS-C93180LC-EX: Nexus 93180LC-EX
+  NEXUS-C93180YC-EX: Nexus 93180YC-EX
+  NEXUS-C93180YC-FX3: Nexus 93180YC-FX3
+  NEXUS-C9336C-FX2: Nexus 9336C-FX2
+  NEXUS-C9504: Nexus 9504
+  NEXUS-9336: Nexus 9336C-FX2
+
+  # Cisco Catalyst Series
+  CATALYST-2960S-24TD-L: Catalyst 2960S-24TD-L
+  29XX-SERIES: Catalyst 2960S-24TD-L
+  CATALYST-4503: Catalyst 4503
+
+  # Cisco UCS
+  UCS-C220-M5: UCS C220 M5
+
+  # Nokia/ALU
+  7750-SR-7: 7750 SR-7
+  ALU-7750: 7750 SR-7
+  "7750": 7750 SR-7
+
+  # Smart Edge
+  SMART-EDGE-1200-N: SmartEdge 1200
+  "1200-N": SmartEdge 1200
+  "100": SmartEdge 100
+
+  # Huawei
+  HUAWEI-S5328C-EI: S5328C-EI
+  NE40E: NE40E
+  NE8000: NE8000 M8 DC
+
+  # Cisco legacy
+  "7603": ISR7604
+  "7206VXR": 7206VXR
+  "7301": "7301"
+
+  # Spirent Polatis
+  "Polatis Series 6000": Polatis Series 6000
+
+# ============================================================
+# Device Name Patterns -> HW Type
+# ============================================================
+# Used when HW type is empty, to deduce from device name
+# Key: pattern to search in device name (case-insensitive)
+# Value: NetBox device-type model name
+# ============================================================
+
+name_to_hwtype_patterns:
+  # Console servers
+  SRV-CONSOLE: IOLAN STS4-D
+
+  # Huawei (from device name patterns)
+  NE8000: NE8000 M8 DC
+  NE40: NE40E
+
+  # Nokia/ALU (from device name patterns)
+  "7750": 7750 SR-7
+
+  # Cisco ASR Series (from device name patterns)
+  ASR9912: ASR-9912
+  ASR9906: ASR-9906
+  ASR9904: ASR-9904
+  ASR9010: ASR-9010
+  ASR9006: ASR-9006
+  ASR9001: ASR-9001
+  ASR9K: ASR-9010
+  ASR1006: ASR-1006
+
+  # Cisco NCS Series
+  NCS5508: NCS-5508
+  NCS5504: NCS-5504
+  NCS5502: NCS-5502
+  NCS5001: NCS-5001
+  NCS55A1: NCS-55A1
+
+  # Cisco Nexus
+  N9K: Nexus 9504
+  NEXUS: Nexus 9504
+
+  # Spirent Polatis
+  Polatis: Polatis Series 6000

@@ -1,0 +1,67 @@
+show_router_bundle:
+  iosxr: show bundle
+  iosxe: show etherchannel summary
+  hvrp: display eth-trunk
+  sros: show lag description
+  alticeptin: interfaces/lag/status/show
+
+show_router_cards:
+  iosxr: show platform
+  iosxe: show platform
+  hvrp:
+    NE_8000:
+      - display device
+      - display device pic-status
+    NE_40:
+      - display device
+      - display device pic-status
+    ATN_910CG:
+      - display device
+      - display device pic-status
+    S9306: display device
+  sros:
+    - show card
+    - show mda
+    - show chassis power-supply
+    - show chassis environment
+  alticeptin: equipment/boards/show
+  isam: show equipment slot
+
+show_router_interface_address:
+  sros: show router interface
+
+show_router_interface_ipv4_address:
+  iosxr: show ip interface brief
+  iosxe: show ip interface brief
+  hvrp: display ip interface brief
+
+show_router_interface_ipv6_address:
+  iosxr: show ipv6 interface brief
+  iosxe: show ipv6 interface brief
+  hvrp: display ipv6 interface brief
+
+show_router_interfaces:
+  iosxr: show interfaces brief
+  iosxe: show interfaces summary
+  hvrp: display interface brief
+  sros: show port
+  alticeptin: interfaces/ethernet/show --slot={slot}
+  isam: show port
+
+show_router_interface_index:
+  iosxr: show snmp interface
+
+show_router_interface_location:
+  iosxr: show interfaces location {location}
+
+show_isis_interfaces:
+  iosxr: show isis interface
+  sros: show router isis interface
+
+show_router_inventory:
+  iosxr: show inventory
+  iosxe: show inventory
+
+show_bgp_neighbors:
+  iosxr: show bgp summary
+  sros: show router bgp summary

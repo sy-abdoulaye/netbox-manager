@@ -1,0 +1,5 @@
+polatis:
+  devices:
+    - polatis-01
+    - polatis-02
+    - polatis-03

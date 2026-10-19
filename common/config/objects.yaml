@@ -1,0 +1,46 @@
+# Domain Driven Development:
+# dcim
+bundles:
+  path: "common/data/netbox/dcim/bundles.yaml"
+console_ports:
+  path: "common/data/netbox/dcim/console_ports.yaml"
+devices:
+  path: "common/data/netbox/dcim/devices.yaml"
+device_roles:
+  path: "common/data/netbox/dcim/device_roles.yaml"
+interfaces:
+  path: "common/data/netbox/dcim/interfaces.yaml"
+ip_addresses:
+  path: "common/data/netbox/dcim/ip_addresses.yaml"
+modules:
+  path: "common/data/netbox/dcim/modules.yaml"
+regions:
+  path: "common/data/netbox/dcim/regions.yaml"
+racks:
+  path: "common/data/netbox/dcim/racks.yaml"
+sites:
+  path: "common/data/netbox/dcim/sites.yaml"
+# sites_group:
+#   path: "common/data/netbox/dcim/sites_group.yaml"
+tenants:
+  path: "common/data/netbox/dcim/tenants.yaml"
+inventory_items:
+  path: "common/data/netbox/dcim/inventory_items.yaml"
+
+# extras
+custom_fields:
+  path: "common/data/netbox/extras/custom_fields.yaml"
+
+# module-type
+module_types:
+  path: models/module-types/custom
+
+# device-type
+device_types:
+  path: models/device-types/custom
+
+# network collect actions
+isis_interfaces:
+  path: "common/data/netbox/dcim/isis_interfaces.yaml"
+bgp_interfaces:
+  path: "common/data/netbox/dcim/bgp_interfaces.yaml"

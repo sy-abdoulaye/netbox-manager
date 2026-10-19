@@ -1,0 +1,89 @@
+testbed:
+  name: testbed_collect.yaml
+  ############## CREDENTIALS START ##########################
+  # Valeurs factices : dans l'original, chaque mot de passe est chiffré via
+  # le mécanisme pyATS secrets (%ENC{...}). Remplacées ici par un placeholder
+  # explicite — ce fichier ne doit jamais contenir de secret réel ou
+  # déchiffrable.
+  credentials:
+    # stc credentials:
+    stc:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation-stc
+    vipt:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # Credential(login and password) chain N1
+    chaine_n1:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # Credential(login and password) Chain N
+    chaine_n:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    ssh_chaine_n:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # Syslog server chain N1
+    chaine_n1_syslog:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # Syslog server chain N
+    chaine_n_syslog:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # Credentials for user local chaine N1 DUT
+    chaine_n1_account_local:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: labo
+    # Credentials for user local chaine N DUT
+    chaine_n_account_local:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: labo
+    # Credentials for user tacacs chain N1 Read-Only
+    chaine_n1_account_read_only:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation-ro
+    # Credentials for user tacacs chain N Read-Only
+    chaine_n_account_read_only:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation-ro
+    # Credential automation in rancid server chain N1
+    chaine_n1_rancid:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # Credential automation in rancid server chain N
+    chaine_n_rancid:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # Tacacs server OLT Chain N and Chain N1
+    chain_n_n1_olt:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # HPOV nnm server ssh account
+    vlnnm02_ssh:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+    # OLT jump host ssh account
+    vbaballe:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: automation
+      # admin local account for Nokia OLT that doesn't support tacacs
+    olt_nokia_admin_local_account:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: isadmin
+    olt_nokia_admin_local_account_tl1:
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+      username: SUPERUSER
+      # Optical Matrix accounts
+    polatis-01:
+      username: admin
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+    polatis-02:
+      username: admin
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+    # Optical Matrix for domain ACCESS
+    polatis-03:
+      username: admin
+      password: "%ENC{PLACEHOLDER_REPLACE_ME}"
+  ############## CREDENTIALS END ##########################

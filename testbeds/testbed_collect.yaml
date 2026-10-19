@@ -1,0 +1,72 @@
+extends: base_testbed.yaml
+
+# Add device in this section below devices
+# NOTE: fichier remplacé par un échantillon synthétique (3 devices fictifs)
+# pour la publication — l'original contient le véritable inventaire collecte.
+devices:
+  ### ACCES - PEAG - CHAINE N1  ##################################
+  demo-7750-collft-01:
+    region: chaine_n
+    alias: demo-7750-collft-01
+    os: sros
+    custom:
+      type: 7750_SR
+      arch: 7750_SR_7
+      role: COLLECT_COLLFT
+      process_isis: COLLECT_COLLFT
+      manufacturer: Nokia
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.110
+        port: 22
+        proxy: jump-n
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+
+  demo-ne40-peag-01:
+    region: chaine_n1
+    alias: demo-ne40-peag-01
+    os: hvrp
+    custom:
+      type: NE_40
+      arch: NE_40E
+      role: COLLECT_PEAG
+      process_isis: COLLECT_PEAG
+      manufacturer: Huawei
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.111
+        port: 22
+        proxy: jump-n1
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0
+
+  demo-asr-ura-01:
+    region: chaine_n
+    alias: demo-asr-ura-01
+    os: iosxr
+    custom:
+      type: ASR-9010
+      arch: ASR9K
+      role: COLLECT_URA
+      process_isis: COLLECT_URA
+      manufacturer: Cisco
+    connections:
+      vty:
+        protocol: ssh
+        host: 203.0.113.112
+        port: 22
+        proxy: jump-n
+        class: "unicon.Unicon"
+        debug: True
+        settings:
+          GRACEFUL_DISCONNECT_WAIT_SEC: 0
+          POST_DISCONNECT_WAIT_SEC: 0

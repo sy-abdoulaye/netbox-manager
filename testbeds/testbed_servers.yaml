@@ -1,0 +1,152 @@
+extends: base_testbed.yaml
+devices:
+  #################################################
+  vipt:
+    connections:
+      vty:
+        host: 203.0.113.10
+        protocol: ssh
+        login_creds:
+          - vipt
+    os: linux
+    type: linux
+  #################################################
+  velocity:
+    connections:
+      http_session:
+        host: 203.0.113.11
+        protocol: https
+        login_creds:
+          - velocity
+    os: velocity
+    type: velocity
+  #################################################
+  polatis-01:
+    connections:
+      defaults:
+        class: "pypolatis.session"
+      http_session:
+        host: 203.0.113.20
+        protocol: https
+        login_creds:
+          - polatis-01
+    os: polatis
+    type: polatis
+  polatis-02:
+    connections:
+      defaults:
+        class: "pypolatis.session"
+      http_session:
+        host: 203.0.113.21
+        protocol: https
+        login_creds:
+          - polatis-02
+    os: polatis
+    type: polatis
+  polatis-03:
+    connections:
+      defaults:
+        class: "pypolatis.session"
+      http_session:
+        host: 203.0.113.22
+        protocol: https
+        login_creds:
+          - polatis-03
+    os: polatis
+    type: polatis
+  #################################################
+  # stc host
+  stc-host:
+    connections:
+      defaults:
+        class: "unicon.Unicon"
+      windows:
+        host: 203.0.113.30
+        protocol: ssh
+        login_creds:
+          - stc
+    os: windows
+    type: windows
+    #################################################
+  # jumphosts / syslogs / etc.
+  # chaine N1
+  jump-n1:
+    connections:
+      vty:
+        host: 203.0.113.40
+        protocol: ssh
+        login_creds:
+          - chaine_n1
+    os: linux
+    type: linux
+  # chain N
+  jump-n:
+    connections:
+      vty:
+        host: 203.0.113.41
+        protocol: ssh
+        login_creds:
+          - ssh_chaine_n
+    os: linux
+    type: linux
+  # OLT chain N chain N1
+  jump-olt:
+    connections:
+      vty:
+        host: 203.0.113.42
+        protocol: ssh
+        login_creds:
+          - vbaballe
+    os: linux
+    type: linux
+  #################################################
+  syslog-n1: # syslog server chaine N1
+    connections:
+      vty:
+        host: 203.0.113.50
+        protocol: ssh
+        login_creds:
+          - chaine_n1_syslog
+    os: linux
+    type: linux
+
+  syslog-n: # syslog server chaine N
+    connections:
+      vty:
+        host: 203.0.113.51
+        protocol: ssh
+        login_creds:
+          - chaine_n_syslog
+    os: linux
+    type: linux
+  rancid-n1: # rancid server chain N1
+    connections:
+      vty:
+        host: 203.0.113.60
+        protocol: ssh
+        proxy: jump-n1
+        login_creds:
+          - chaine_n1_rancid
+    os: linux
+    type: linux
+
+  rancid-n: # rancid server chain N
+    connections:
+      vty:
+        host: 203.0.113.61
+        protocol: ssh
+        proxy: jump-n
+        login_creds:
+          - chaine_n_rancid
+    os: linux
+    type: linux
+
+  nnm-server: # hpov nnm
+    connections:
+      vty:
+        host: 203.0.113.70
+        protocol: ssh
+        login_creds:
+          - vlnnm02_ssh
+    os: linux
+    type: linux

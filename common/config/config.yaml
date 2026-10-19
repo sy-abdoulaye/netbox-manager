@@ -1,0 +1,254 @@
+netbox:
+  url: "http://203.0.113.9:9999/"
+  token: "<NETBOX_API_TOKEN>"
+  # proxy: "http://203.0.113.200:3128"
+
+# sites_group:
+#   group:
+#     name: lab-sites
+#     slug: lab-sites
+#     description: site in demo-city
+#     comments: lab-sites regroupe les différents sites du Lab de demo-city
+
+sites:
+  demo-lab:
+    name: Demo-lab
+    slug: demo-lab-site
+    status: active
+    facility: demo-city
+    region: ile-de-france
+    tenant: demo-lab
+    time_zone: Europe/Paris
+    description: Primary lab site in Demo-city
+    comments: The Demo-lab site brings together the N and N1 chain routers
+    latitude: 48.8566
+    longitude: 2.3522
+    physical_address: 1 Rue de la Demo, 75000 Demo-City
+    shipping_address: 1 Rue de la Demo, 75000 Demo-City
+
+regions:
+  ile_de_france:
+    name: Ile-de-France
+    slug: ile-de-france
+    description: Region Île-de-France
+
+tenants:
+  demo-lab:
+    name: Demo Lab
+    slug: demo-lab
+    description: Tenant associated with demo site
+    comments: Created automatically via NetBox API
+  chaine-n:
+    name: Lab Chaine N
+    slug: lab-chaine-n
+    description: Tenant associated with N chain routers
+    comments: Created automatically via NetBox API
+  chaine-n1:
+    name: Lab Chaine N1
+    slug: lab-chaine-n1
+    description: Tenant associated with N1 chain routers
+    comments: Created automatically via NetBox API
+
+device_roles:
+  collecte:
+    name: collecte
+    slug: collecte-lab
+    color: "800080" # purple
+  dcn:
+    name: dcn
+    slug: dcn-lab
+    color: "f5f5dc" # stone
+  coreb2b:
+    name: coreb2b
+    slug: coreb2b-lab
+    color: "008080" # teal
+  coreip:
+    name: coreip
+    slug: coreip-lab
+    color: "008000" # green
+  # device roles for ftth
+  ftth:
+    name: ftth
+    slug: ftth-lab
+    color: "39393a" # graphite
+  gp:
+    name: gp
+    slug: gp-lab
+    parent: ftth-lab
+    color: "5688c7" # dusty denim
+  ga:
+    name: ga
+    slug: ga-lab
+    parent: ftth-lab
+    color: "6a98d6" #6a98d6
+  # devices roles for coreb2b
+  ipsec:
+    name: ipsec
+    slug: ipsec-lab
+    parent: coreb2b-lab
+    color: "4b0082" # indigo
+  lnsng:
+    name: lnsng
+    slug: lnsng-lab
+    parent: coreb2b-lab
+    color: "00ffff" # cyan
+  pecng:
+    name: pecng
+    slug: pecng-lab
+    parent: coreb2b-lab
+    color: "ffa500" # orange
+  pesms:
+    name: pesms
+    slug: pesms-lab
+    parent: coreb2b-lab
+    color: "808080" # gray
+  pesng:
+    name: pesng
+    slug: pesng-lab
+    parent: coreb2b-lab
+    color: "a52a2a" # brown
+  swagr:
+    name: swagr
+    slug: swagr-lab
+    parent: coreb2b-lab
+    color: "20b2aa" # light sea green
+  pespon:
+    name: pespon
+    slug: pespon-lab
+    parent: coreb2b-lab
+    color: "ff8c00" # dark orange
+  rrvpnb2b:
+    name: rrvpnb2b
+    slug: rrvpnb2b-lab
+    parent: coreb2b-lab
+    color: "8a2be2" # blue violet
+
+  # devices roles for coreip
+  co:
+    name: co
+    slug: co-lab
+    parent: coreip-lab
+    color: "ffff00" # yellow
+  leafbib:
+    name: leafbib
+    slug: leafbib-lab
+    parent: coreip-lab
+    color: "708090" # slate
+  pbib:
+    name: pbib
+    slug: pbib-lab
+    parent: coreip-lab
+    color: "50c878" # emerald
+  pebib:
+    name: pebib
+    slug: pebib-lab
+    parent: coreip-lab
+    color: "32cd32" # lime
+  peint:
+    name: peint
+    slug: peint-lab
+    parent: coreip-lab
+    color: "ffbf00" # amber
+  spinebib:
+    name: spinebib
+    slug: spinebib-lab
+    parent: coreip-lab
+    color: "e4e4e4" # zinc
+  rr:
+    name: rr
+    slug: rr-lab
+    parent: coreip-lab
+    color: "dc143c" # crimson
+  rrbib:
+    name: rrbib
+    slug: rrbib-lab
+    parent: coreip-lab
+    color: "b22222" # firebrick
+  rrvpnbib:
+    name: rrvpnbib
+    slug: rrvpnbib-lab
+    parent: coreip-lab
+    color: "ff4500" # orange red
+  rrspine:
+    name: rrspine
+    slug: rrspine-lab
+    parent: coreip-lab
+    color: "2f4f4f" # dark slate gray
+
+  # devices roles for dcn
+  srv_console:
+    name: srv-console
+    slug: srv-console-lab
+    parent: dcn-lab
+    color: "a8a8a8" # neutral
+
+  # devices roles for collecte
+  ura:
+    name: ura
+    slug: ura-lab
+    parent: collecte-lab
+    color: "800000" # maroon
+  ftts:
+    name: ftts
+    slug: ftts-lab
+    parent: collecte-lab
+    color: "ff6347" # tomato
+  peag:
+    name: peag
+    slug: peag-lab
+    parent: collecte-lab
+    color: "ff00ff" # fuchsia
+  peu:
+    name: peu
+    slug: peu-lab
+    parent: collecte-lab
+    color: "ff007f" # rose
+  rrvpn:
+    name: rrvpn
+    slug: rrvpn-lab
+    parent: coreip-lab
+    color: d2e3fc
+  perip:
+    name: perip
+    slug: perip-lab
+    parent: collecte-lab
+    color: "ceead6"
+  pesat:
+    name: pesat
+    slug: pesat-lab
+    parent: collecte-lab
+    color: "9932cc" # dark orchid
+  collft:
+    name: collft
+    slug: collft-lab
+    parent: collecte-lab
+    color: "2b3641"
+
+custom_fields:
+  virtual_label:
+    name: virtual_label
+    label: Virtual Label
+    type: text
+    object_types:
+      - dcim.interface
+      - dcim.consoleport
+  remote_port_name:
+    name: remote_port_name
+    label: Remote Port Name
+    type: text
+    object_types:
+      - dcim.interface
+      - dcim.consoleport
+  remote_device:
+    name: remote_device
+    label: Remote Device
+    type: text
+    object_types:
+      - dcim.interface
+      - dcim.consoleport
+  ifIndex:
+    name: ifIndex
+    label: Interface ifIndex
+    type: integer
+    object_types:
+      - dcim.interface

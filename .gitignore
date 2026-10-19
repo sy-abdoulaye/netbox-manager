@@ -1,0 +1,19 @@
+__pycache__/
+models/device-types/custom
+models/module-types/custom
+common/config/netbox_output.yaml
+common/data/netbox/*
+common/data/raw/*
+common/data/network/*
+common/data/excluded_devices/*
+racktables/results/*
+datafiles/device_datafiles/*
+common/parsers/outputs/*
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/

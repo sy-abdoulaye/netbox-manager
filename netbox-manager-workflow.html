@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>NetBox Manager — Architecture</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Outfit:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080c16;
+            --surface: #0c1220;
+            --surface2: #101828;
+            --surface3: #141e30;
+            --border: #1c2d47;
+
+            --blue: #3b82f6;
+            --cyan: #22d3ee;
+            --green: #34d399;
+            --purple: #c084fc;
+            --orange: #fb923c;
+            --yellow: #fbbf24;
+            --red: #f87171;
+
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --text-muted: #475569;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 32px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* subtle grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(59, 130, 246, .025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, .025) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ── Page wrapper ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1320px;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            margin-bottom: 44px;
+            animation: fadeDown .5s ease both;
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--blue);
+            border: 1px solid rgba(59, 130, 246, .3);
+            background: rgba(59, 130, 246, .07);
+            padding: 5px 14px;
+            border-radius: 2px;
+            margin-bottom: 14px;
+        }
+
+        .header h1 {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+            background: linear-gradient(120deg, #e2e8f0, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* ── Outer 3-column layout ── */
+        .outer {
+            display: grid;
+            grid-template-columns: 280px 1fr 260px;
+            gap: 32px;
+            align-items: stretch;
+        }
+
+        /* ── Container label ── */
+        .container-wrap {
+            border-radius: 16px;
+            border: 1.5px solid var(--border);
+            position: relative;
+            padding: 44px 24px 28px;
+        }
+
+        .container-wrap.sources {
+            border-color: rgba(59, 130, 246, .3);
+            background: rgba(59, 130, 246, .03);
+        }
+
+        .container-wrap.manager {
+            border-color: rgba(34, 211, 238, .4);
+            background: rgba(34, 211, 238, .03);
+        }
+
+        .container-wrap.dest {
+            border-color: rgba(52, 211, 153, .4);
+            background: rgba(52, 211, 153, .03);
+        }
+
+        .container-label {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 2px 12px;
+            border-radius: 3px;
+            background: var(--bg);
+            border: 1px solid;
+        }
+
+        .sources .container-label {
+            color: var(--blue);
+            border-color: rgba(59, 130, 246, .4);
+        }
+
+        .manager .container-label {
+            color: var(--cyan);
+            border-color: rgba(34, 211, 238, .4);
+        }
+
+        .dest .container-label {
+            color: var(--green);
+            border-color: rgba(52, 211, 153, .4);
+        }
+
+        /* ── Source blocks ── */
+        .sources-col {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .src-block {
+            border-radius: 12px;
+            padding: 22px 20px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .src-block:hover {
+            transform: translateY(-2px);
+        }
+
+        .src-block.racktables {
+            border-color: rgba(192, 132, 252, .35);
+        }
+
+        .src-block.racktables:hover {
+            box-shadow: 0 6px 28px rgba(192, 132, 252, .15);
+        }
+
+        .src-block.devices {
+            border-color: rgba(251, 191, 36, .35);
+        }
+
+        .src-block.devices:hover {
+            box-shadow: 0 6px 28px rgba(251, 191, 36, .15);
+        }
+
+        .src-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .src-icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .racktables .src-icon-wrap {
+            background: rgba(192, 132, 252, .12);
+        }
+
+        .devices .src-icon-wrap {
+            background: rgba(251, 191, 36, .12);
+        }
+
+        .src-name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .racktables .src-name {
+            color: var(--purple);
+        }
+
+        .devices .src-name {
+            color: var(--yellow);
+        }
+
+        .src-tech {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .src-desc {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, .02);
+        }
+
+        /* Device circles visual */
+        .device-circles {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .device-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(251, 191, 36, .4);
+            background: rgba(251, 191, 36, .06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* ── Manager inner ── */
+        .manager-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 16px;
+        }
+
+        /* ── Manager blocks ── */
+        .mblock {
+            border-radius: 12px;
+            padding: 20px 18px;
+            border: 1px solid var(--border);
+            background: var(--surface3);
+            transition: transform .2s, box-shadow .2s;
+            position: relative;
+        }
+
+        .mblock:hover {
+            transform: translateY(-2px);
+        }
+
+        .mblock.collector {
+            border-color: rgba(59, 130, 246, .4);
+        }
+
+        .mblock.transformer {
+            border-color: rgba(34, 211, 238, .4);
+        }
+
+        .mblock.validator {
+            border-color: rgba(251, 146, 60, .4);
+            grid-column: 1 / 3;
+        }
+
+        .mblock.populator {
+            border-color: rgba(52, 211, 153, .4);
+            grid-column: 1 / 3;
+        }
+
+        .mblock.collector:hover {
+            box-shadow: 0 6px 24px rgba(59, 130, 246, .2);
+        }
+
+        .mblock.transformer:hover {
+            box-shadow: 0 6px 24px rgba(34, 211, 238, .2);
+        }
+
+        .mblock.validator:hover {
+            box-shadow: 0 6px 24px rgba(251, 146, 60, .2);
+        }
+
+        .mblock.populator:hover {
+            box-shadow: 0 6px 24px rgba(52, 211, 153, .2);
+        }
+
+        .mblock-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .mblock-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .collector .mblock-icon {
+            background: rgba(59, 130, 246, .12);
+        }
+
+        .transformer .mblock-icon {
+            background: rgba(34, 211, 238, .12);
+        }
+
+        .validator .mblock-icon {
+            background: rgba(251, 146, 60, .12);
+        }
+
+        .populator .mblock-icon {
+            background: rgba(52, 211, 153, .12);
+        }
+
+        .mblock-name {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .collector .mblock-name {
+            color: var(--blue);
+        }
+
+        .transformer .mblock-name {
+            color: var(--cyan);
+        }
+
+        .validator .mblock-name {
+            color: var(--orange);
+        }
+
+        .populator .mblock-name {
+            color: var(--green);
+        }
+
+        .mblock-tech {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .mblock-desc {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        /* validator/populator side-by-side detail */
+        .mblock-body-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mblock-detail {
+            background: rgba(0, 0, 0, .2);
+            border-radius: 8px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+        }
+
+        .mblock-detail-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .validator .mblock-detail-title {
+            color: var(--orange);
+        }
+
+        .populator .mblock-detail-title {
+            color: var(--green);
+        }
+
+        .mblock-detail p {
+            font-size: 11.5px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* ── YAML strip ── */
+        .yaml-strip {
+            grid-column: 1 / 3;
+            padding: 10px 14px;
+            background: rgba(34, 211, 238, .04);
+            border: 1px dashed rgba(34, 211, 238, .25);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .yaml-strip-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--cyan);
+            flex-shrink: 0;
+        }
+
+        .yaml-file {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            color: var(--text-muted);
+            background: rgba(34, 211, 238, .07);
+            border: 1px solid rgba(34, 211, 238, .2);
+            padding: 2px 9px;
+            border-radius: 4px;
+        }
+
+        /* ── NetBox dest ── */
+        .nb-block {
+            border-radius: 12px;
+            padding: 24px 20px;
+            border: 1.5px solid rgba(52, 211, 153, .4);
+            background: rgba(52, 211, 153, .04);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: box-shadow .2s;
+        }
+
+        .nb-block:hover {
+            box-shadow: 0 8px 40px rgba(52, 211, 153, .15);
+        }
+
+        .nb-big-icon {
+            font-size: 44px;
+            margin-bottom: 14px;
+        }
+
+        .nb-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--green);
+            margin-bottom: 6px;
+        }
+
+        .nb-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .nb-objs {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .nb-obj {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--green);
+            background: rgba(52, 211, 153, .08);
+            border: 1px solid rgba(52, 211, 153, .2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        /* ── SVG arrows overlay ── */
+        #svg-wrap {
+            position: relative;
+        }
+
+        #svg-arrows {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: visible;
+            z-index: 10;
+        }
+
+        /* ── Legend ── */
+        .legend {
+            display: flex;
+            gap: 28px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 36px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .legend-line {
+            width: 26px;
+            height: 2px;
+            border-radius: 2px;
+        }
+
+        .legend-dash {
+            width: 26px;
+            height: 2px;
+            border-radius: 2px;
+            background: repeating-linear-gradient(90deg, currentColor 0, currentColor 5px, transparent 5px, transparent 9px);
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            animation: fadeDown .5s ease both;
+        }
+
+        .sources-col {
+            animation: fadeUp .5s .1s ease both;
+        }
+
+        .manager-inner {
+            animation: fadeIn .5s .2s ease both;
+        }
+
+        .nb-block {
+            animation: fadeUp .5s .3s ease both;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+
+        <!-- Header -->
+        <div class="header">
+            <div class="badge">Architecture · NetBox Manager</div>
+            <h1>Pipeline d'automatisation réseau</h1>
+            <p>Collecte · Transformation · Validation · Population — flux de données bout en bout</p>
+        </div>
+
+        <div id="svg-wrap" style="width:100%">
+            <div class="outer" id="outer-grid">
+
+                <!-- ══ LEFT: Data Sources ══ -->
+                <div class="container-wrap sources" id="wrap-sources">
+                    <span class="container-label">Data Sources</span>
+                    <div class="sources-col">
+
+                        <div class="src-block racktables" id="bl-rack">
+                            <div class="src-header">
+                                <div class="src-icon-wrap">🗃️</div>
+                                <div>
+                                    <div class="src-name">Racktables</div>
+                                    <div class="src-tech">MySQL · Source de vérité</div>
+                                </div>
+                            </div>
+                            <div class="src-desc">
+                                Base de données du LAB. Contient les équipements, racks, localisations et interfaces
+                                déclarées.
+                                <span style="color:#f87171;font-size:11px;display:block;margin-top:4px">⚠ Parfois
+                                    incomplète ou mal renseignée.</span>
+                            </div>
+                            <div class="tag-row">
+                                <span class="tag">devices</span>
+                                <span class="tag">racks</span>
+                                <span class="tag">locations</span>
+                                <span class="tag">interfaces</span>
+                            </div>
+                        </div>
+
+                        <div class="src-block devices" id="bl-dev">
+                            <div class="src-header">
+                                <div class="src-icon-wrap">🔌</div>
+                                <div>
+                                    <div class="src-name">Network Devices</div>
+                                    <div class="src-tech">Routers · Switches · IOS-XR</div>
+                                </div>
+                            </div>
+                            <div class="src-desc">
+                                Équipements physiques du LAB. Fournissent les données manquantes via SSH en parallèle.
+                            </div>
+                            <div class="device-circles">
+                                <div class="device-circle">🖥</div>
+                                <div class="device-circle">🖥</div>
+                                <div class="device-circle">🖥</div>
+                                <div class="device-circle">🖥</div>
+                                <div class="device-circle">🖥</div>
+                                <div class="device-circle">🖥</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ══ CENTER: NetBox Manager ══ -->
+                <div class="container-wrap manager" id="wrap-manager">
+                    <span class="container-label">⚙ NetBox Manager</span>
+                    <div class="manager-inner">
+
+                        <!-- Collector -->
+                        <div class="mblock collector" id="bl-coll">
+                            <div class="mblock-header">
+                                <div class="mblock-icon">📡</div>
+                                <div>
+                                    <div class="mblock-name">Collector</div>
+                                    <div class="mblock-tech">pyATS · SQL · SSH</div>
+                                </div>
+                            </div>
+                            <div class="mblock-desc">
+                                Point d'entrée du pipeline. Interroge Racktables via SQL et se connecte aux équipements
+                                en SSH (parallèle) via le <code
+                                    style="color:var(--blue);font-family:'JetBrains Mono',monospace">testbed.yaml</code>.
+                            </div>
+                            <div class="tag-row">
+                                <span class="tag">SQL queries</span>
+                                <span class="tag">SSH parallel</span>
+                                <span class="tag">testbed.yaml</span>
+                                <span class="tag">pyATS</span>
+                            </div>
+                        </div>
+
+                        <!-- Transformer -->
+                        <div class="mblock transformer" id="bl-trans">
+                            <div class="mblock-header">
+                                <div class="mblock-icon">⚗️</div>
+                                <div>
+                                    <div class="mblock-name">Transformer</div>
+                                    <div class="mblock-tech">Custom parsers · Data mapping</div>
+                                </div>
+                            </div>
+                            <div class="mblock-desc">
+                                Mappe les données brutes vers les modèles NetBox. Génère un fichier YAML par type
+                                d'objet (devices, interfaces, racks…).
+                            </div>
+                            <div class="tag-row">
+                                <span class="tag">parsers</span>
+                                <span class="tag">data mapping</span>
+                                <span class="tag">yaml gen</span>
+                            </div>
+                        </div>
+
+                        <!-- YAML strip -->
+                        <div class="yaml-strip">
+                            <span class="yaml-strip-label">📄 YAML générés →</span>
+                            <span class="yaml-file">devices.yaml</span>
+                            <span class="yaml-file">interfaces.yaml</span>
+                            <span class="yaml-file">racks.yaml</span>
+                            <span class="yaml-file">ip-addresses.yaml</span>
+                            <span class="yaml-file">prefixes.yaml</span>
+                            <span class="yaml-file">modules.yaml</span>
+                        </div>
+
+                        <!-- Validator -->
+                        <div class="mblock validator" id="bl-valid">
+                            <div class="mblock-header">
+                                <div class="mblock-icon">🛡️</div>
+                                <div>
+                                    <div class="mblock-name">Validator</div>
+                                    <div class="mblock-tech">Pydantic · Schema validation</div>
+                                </div>
+                            </div>
+                            <div class="mblock-body-row">
+                                <div>
+                                    <div class="mblock-desc">
+                                        Valide chaque fichier YAML contre le schéma NetBox. Contrôle les types, champs
+                                        obligatoires et l'intégrité des relations entre objets.
+                                    </div>
+                                    <div class="tag-row">
+                                        <span class="tag">BaseModel</span>
+                                        <span class="tag">Field validators</span>
+                                        <span class="tag">type checking</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mblock-detail">
+                                        <div class="mblock-detail-title">Contrôles</div>
+                                        <p>Types de données · Champs requis · Unicité · Relations inter-objets ·
+                                            Contraintes NetBox</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Populator -->
+                        <div class="mblock populator" id="bl-pop">
+                            <div class="mblock-header">
+                                <div class="mblock-icon">🚀</div>
+                                <div>
+                                    <div class="mblock-name">Populator</div>
+                                    <div class="mblock-tech">pynetbox · REST API</div>
+                                </div>
+                            </div>
+                            <div class="mblock-body-row">
+                                <div>
+                                    <div class="mblock-desc">
+                                        Crée ou met à jour les objets dans NetBox via l'API REST, en respectant l'ordre
+                                        des dépendances entre objets.
+                                    </div>
+                                    <div class="tag-row">
+                                        <span class="tag">create()</span>
+                                        <span class="tag">update()</span>
+                                        <span class="tag">pynetbox</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mblock-detail">
+                                        <div class="mblock-detail-title">Ordre d'ingestion</div>
+                                        <p>Sites → Racks → Devices → Interfaces → Module Bays → IP Addresses → Prefixes
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ══ RIGHT: NetBox ══ -->
+                <div class="container-wrap dest" id="wrap-dest">
+                    <span class="container-label">Destination</span>
+                    <div class="nb-block" id="bl-nb">
+                        <div class="nb-big-icon">🗄️</div>
+                        <div class="nb-title">NetBox</div>
+                        <div class="nb-sub">Source de vérité<br>unifiée &amp; complète</div>
+                        <div class="nb-objs">
+                            <span class="nb-obj">📍 Sites &amp; Locations</span>
+                            <span class="nb-obj">🗂 Racks</span>
+                            <span class="nb-obj">💻 Devices</span>
+                            <span class="nb-obj">🔗 Interfaces</span>
+                            <span class="nb-obj">📦 Module Bays</span>
+                            <span class="nb-obj">🌐 IP Addresses (v4/v6)</span>
+                            <span class="nb-obj">📡 Prefixes</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /outer -->
+
+            <!-- SVG arrows -->
+            <svg id="svg-arrows">
+                <defs>
+                    <marker id="m-purple" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                        <path d="M0,0 L0,7 L9,3.5 z" fill="#c084fc" />
+                    </marker>
+                    <marker id="m-yellow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                        <path d="M0,0 L0,7 L9,3.5 z" fill="#fbbf24" />
+                    </marker>
+                    <marker id="m-yellow-rev" markerWidth="9" markerHeight="9" refX="2" refY="3.5" orient="auto">
+                        <path d="M9,0 L9,7 L0,3.5 z" fill="#fbbf24" />
+                    </marker>
+                    <marker id="m-cyan" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                        <path d="M0,0 L0,7 L9,3.5 z" fill="#22d3ee" />
+                    </marker>
+                    <marker id="m-blue" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                        <path d="M0,0 L0,7 L9,3.5 z" fill="#3b82f6" />
+                    </marker>
+                    <marker id="m-orange" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                        <path d="M0,0 L0,7 L9,3.5 z" fill="#fb923c" />
+                    </marker>
+                    <marker id="m-green" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+                        <path d="M0,0 L0,7 L9,3.5 z" fill="#34d399" />
+                    </marker>
+                </defs>
+            </svg>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-line" style="background:var(--purple)"></div>
+                SQL request
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background:var(--green)"></div>
+                JSON data (SSH results)
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background:var(--yellow);opacity:.5"></div>
+                SSH commands
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background:var(--blue)"></div>
+                call (données collectées)
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background:var(--cyan)"></div>
+                yaml files
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background:var(--orange)"></div>
+                validated
+            </div>
+            <div class="legend-item">
+                <div class="legend-line" style="background:var(--green)"></div>
+                REST API
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function R(id) {
+            const el = document.getElementById(id);
+            const wrap = document.getElementById('svg-wrap');
+            const er = el.getBoundingClientRect();
+            const wr = wrap.getBoundingClientRect();
+            return {
+                x: er.left - wr.left + er.width / 2,
+                y: er.top - wr.top + er.height / 2,
+                t: er.top - wr.top,
+                b: er.bottom - wr.top,
+                l: er.left - wr.left,
+                r: er.right - wr.left,
+                w: er.width,
+                h: er.height,
+            };
+        }
+
+        function arrow(svg, x1, y1, x2, y2, color, marker, label, dashed = false, cpx = null, cpy = null) {
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+            const mid = cpx !== null
+                ? { x: (x1 + 2 * cpx + x2) / 4, y: (y1 + 2 * cpy + y2) / 4 }
+                : { x: (x1 + x2) / 2, y: (y1 + y2) / 2 };
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const d = cpx !== null
+                ? `M${x1},${y1} Q${cpx},${cpy} ${x2},${y2}`
+                : `M${x1},${y1} L${x2},${y2}`;
+            path.setAttribute('d', d);
+            path.setAttribute('stroke', color);
+            path.setAttribute('stroke-width', '2');
+            path.setAttribute('fill', 'none');
+            path.setAttribute('opacity', '0.75');
+            if (dashed) path.setAttribute('stroke-dasharray', '6,4');
+            path.setAttribute('marker-end', `url(#${marker})`);
+            const pid = 'p' + Math.random().toString(36).slice(2);
+            path.id = pid;
+            g.appendChild(path);
+
+            // animated dot
+            const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            dot.setAttribute('r', '3.5');
+            dot.setAttribute('fill', color);
+            const am = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+            am.setAttribute('dur', (1.8 + Math.random() * 1.4) + 's');
+            am.setAttribute('repeatCount', 'indefinite');
+            am.setAttribute('begin', (Math.random() * 2) + 's');
+            const mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
+            mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + pid);
+            am.appendChild(mpath);
+            dot.appendChild(am);
+            g.appendChild(dot);
+
+            if (label) {
+                const tw = label.length * 5.6 + 14;
+                const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                bg.setAttribute('x', mid.x - tw / 2);
+                bg.setAttribute('y', mid.y - 8);
+                bg.setAttribute('width', tw);
+                bg.setAttribute('height', 15);
+                bg.setAttribute('rx', '4');
+                bg.setAttribute('fill', '#080c16');
+                bg.setAttribute('stroke', color);
+                bg.setAttribute('stroke-width', '0.8');
+                bg.setAttribute('opacity', '0.95');
+                g.appendChild(bg);
+
+                const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                txt.setAttribute('x', mid.x);
+                txt.setAttribute('y', mid.y + 4);
+                txt.setAttribute('text-anchor', 'middle');
+                txt.setAttribute('fill', color);
+                txt.setAttribute('font-family', "'JetBrains Mono', monospace");
+                txt.setAttribute('font-size', '9');
+                txt.setAttribute('font-weight', '600');
+                txt.textContent = label;
+                g.appendChild(txt);
+            }
+
+            svg.appendChild(g);
+        }
+
+        function draw() {
+            const svg = document.getElementById('svg-arrows');
+            // remove all children except defs
+            while (svg.children.length > 1) svg.removeChild(svg.lastChild);
+
+            const rack = R('bl-rack');
+            const dev = R('bl-dev');
+            const coll = R('bl-coll');
+            const trans = R('bl-trans');
+            const valid = R('bl-valid');
+            const pop = R('bl-pop');
+            const nb = R('bl-nb');
+
+            // 1. Collector → Racktables  (SQL request, purple)
+            arrow(svg,
+                coll.l, coll.y - 12,
+                rack.r, rack.y - 12,
+                '#c084fc', 'm-purple', 'SQL request',
+                true);
+
+            // 2. Racktables → Collector  (JSON data, cyan, slight offset)
+            arrow(svg,
+                rack.r, rack.y + 12,
+                coll.l, coll.y + 12,
+                '#34d399', 'm-green', 'JSON data',
+                true);
+
+            // 3. Collector → Network Devices (SSH commands, yellow dashed)
+            const sshCpx = (coll.l + dev.r) / 2;
+            const sshCpy = (coll.b + dev.t) / 2 + 20;
+            arrow(svg,
+                coll.l, coll.b - 20,
+                dev.r, dev.y - 10,
+                '#fbbf24', 'm-yellow', 'SSH commands',
+                true,
+                (coll.l + dev.r) / 2 - 30,
+                (coll.b + dev.y) / 2 + 30
+            );
+
+            // 4. Network Devices → Collector (JSON data back, yellow solid)
+            arrow(svg,
+                dev.r, dev.y + 10,
+                coll.l, coll.b - 5,
+                '#34d399', 'm-green', 'JSON data',
+                true,
+                (coll.l + dev.r) / 2 + 30,
+                (coll.b + dev.y) / 2 + 60
+            );
+
+            // 5. Collector → Transformer (call, blue)
+            arrow(svg,
+                coll.r, coll.y,
+                trans.l, trans.y,
+                '#3b82f6', 'm-blue', 'call', true);
+
+            // 6. Transformer → Validator (yaml files, cyan — vertical)
+            const yamlMidX = (coll.r + trans.r) / 2;
+            arrow(svg,
+                trans.x, trans.b,
+                valid.x + 60, valid.t,
+                '#22d3ee', 'm-cyan', 'yaml files', true);
+
+            // Also collector bottom → validator (collected raw data)
+            arrow(svg,
+                coll.x - 30, coll.b,
+                valid.x - 60, valid.t,
+                '#3b82f6', 'm-blue', null, true);
+
+            // 7. Validator → Populator (validated, orange)
+            arrow(svg,
+                valid.x, valid.b,
+                pop.x, pop.t,
+                '#fb923c', 'm-orange', 'validated');
+
+            // 8. Populator → NetBox (REST API, green)
+            arrow(svg,
+                pop.r, pop.y,
+                nb.l, nb.y,
+                '#34d399', 'm-green', 'REST API', true);
+        }
+
+        window.addEventListener('load', () => { draw(); });
+        window.addEventListener('resize', draw);
+    </script>
+</body>
+
+</html>

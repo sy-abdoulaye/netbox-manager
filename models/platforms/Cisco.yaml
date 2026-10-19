@@ -1,0 +1,43 @@
+platforms:
+  # Root platform
+  - name: "Cisco IOS-XR"
+    slug: "iosxr"
+    manufacturer: "Cisco"
+
+  # ASR9k XR 7.11.21
+  - name: "ASR9k IOS-XR 7.11.21"
+    slug: "asr9k-iosxr-7-11-21"
+    manufacturer: "Cisco"
+    parent: "iosxr"
+    description: "<chassis_type> <os-type> <version>"
+
+  - name: "7.11.21-71121_LAB_BIB_ASR_20250909"
+    slug: "giso-7-11-21-71121-lab-bib-asr-20250909"
+    manufacturer: "Cisco"
+    parent: "asr9k-iosxr-7-11-21"
+    description: "<giso-label>"
+
+  # NCS5500 XR 7.11.21
+  - name: "NCS-5500 IOS-XR 7.11.21"
+    slug: "ncs5500-iosxr-7-11-21"
+    manufacturer: "Cisco"
+    parent: "iosxr"
+    description: "<chassis_type> <os-type> <version>"
+
+  - name: "7.11.21-71121_LAB_BIB_NCS_20250624"
+    slug: "giso-7-11-21-71121-lab-bib-ncs-20250624"
+    manufacturer: "Cisco"
+    parent: "ncs5500-iosxr-7-11-21"
+    description: "<giso-label>"
+
+  - name: "7.11.21-LAB_BIB_NCS_20251204"
+    slug: "giso-7-11-21-lab-bib-ncs-20251204"
+    manufacturer: "Cisco"
+    parent: "ncs5500-iosxr-7-11-21"
+    description: "<giso-label>"
+
+  - name: "7.11.21_71121_LAB_BIB_NCS_20251030"
+    slug: "giso-7-11-21-71121-lab-bib-ncs-20251030"
+    manufacturer: "Cisco"
+    parent: "ncs5500-iosxr-7-11-21"
+    description: "<giso-label>"
